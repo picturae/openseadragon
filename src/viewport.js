@@ -52,6 +52,7 @@
  * @param {Number} [options.defaultZoomLevel] - See defaultZoomLevel in {@link OpenSeadragon.Options}.
  * @param {Number} [options.minZoomLevel] - See minZoomLevel in {@link OpenSeadragon.Options}.
  * @param {Number} [options.maxZoomLevel] - See maxZoomLevel in {@link OpenSeadragon.Options}.
+ * @param {Array} [options.zoomLevels] - See zoomLevels in {@link OpenSeadragon.Options}.
  * @param {Number} [options.degrees] - See degrees in {@link OpenSeadragon.Options}.
  * @param {Boolean} [options.homeFillsViewer] - See homeFillsViewer in {@link OpenSeadragon.Options}.
  */
@@ -106,12 +107,14 @@ $.Viewport = function( options ) {
         defaultZoomLevel:   $.DEFAULT_SETTINGS.defaultZoomLevel,
         minZoomLevel:       $.DEFAULT_SETTINGS.minZoomLevel,
         maxZoomLevel:       $.DEFAULT_SETTINGS.maxZoomLevel,
+        zoomLevels:         $.DEFAULT_SETTINGS.zoomLevels,
         degrees:            $.DEFAULT_SETTINGS.degrees,
         homeFillsViewer:    $.DEFAULT_SETTINGS.homeFillsViewer
 
     }, options );
 
     this._updateContainerInnerSize();
+    this._sortZoomLevels();
 
     this.centerSpringX = new $.Spring({
         initial: 0,
@@ -773,6 +776,14 @@ $.Viewport.prototype = /** @lends OpenSeadragon.Viewport.prototype */{
             refPoint :
             null;
 
+        if (this.zoomLevels && zoom !== this.getHomeZoom()) {
+            if ( zoom < this.zoomSpring.current.value ) {
+                zoom = this.getLowerZoomLevel(zoom);
+            } else if ( zoom > this.zoomSpring.current.value ) {
+                zoom = this.getUpperZoomLevel(zoom);
+            }
+        }
+
         if ( immediately ) {
             this.zoomSpring.resetTo( zoom );
         } else {
@@ -800,6 +811,52 @@ $.Viewport.prototype = /** @lends OpenSeadragon.Viewport.prototype */{
         }
 
         return this;
+    },
+
+    /**
+     * @function
+     * @param {Number} zoom - The desired zoom level
+     * @return {Number} The proper zoom level.
+     */
+    getUpperZoomLevel: function( zoom ) {
+        if ($.isArray(this.zoomLevels) && this.zoomLevels.length) {
+            var imageZoom = this.viewportToImageZoom(zoom);
+            zoom = this.imageToViewportZoom(this.zoomLevels[this.zoomLevels.length - 1]);
+            for (var i = 0; i < this.zoomLevels.length; i++) {
+                if (this.zoomLevels[i] > imageZoom) {
+                    zoom = this.imageToViewportZoom(this.zoomLevels[i]);
+                    break;
+                }
+            }
+            return Math.min(
+                zoom,
+                this.getMaxZoom()
+            );
+        }
+        return zoom;
+    },
+
+    /**
+     * @function
+     * @param {Number} zoom - The desired zoom level
+     * @return {Number} The proper zoom level.
+     */
+    getLowerZoomLevel: function( zoom ) {
+        if ($.isArray(this.zoomLevels) && this.zoomLevels.length) {
+            var imageZoom = this.viewportToImageZoom(zoom);
+            zoom = this.imageToViewportZoom(this.zoomLevels[0]);
+            for (var i = this.zoomLevels.length - 1; i >= 0; i--) {
+                if (this.zoomLevels[i] < imageZoom) {
+                    zoom = this.imageToViewportZoom(this.zoomLevels[i]);
+                    break;
+                }
+            }
+            return Math.max(
+                zoom,
+                this.getMinZoom()
+            );
+        }
+        return zoom;
     },
 
     /**
@@ -1271,6 +1328,21 @@ $.Viewport.prototype = /** @lends OpenSeadragon.Viewport.prototype */{
         var scale = this.homeBounds.width;
         var viewportToImageZoomRatio = (imageWidth / containerWidth) / scale;
         return imageZoom * viewportToImageZoomRatio;
+    },
+
+    /**
+     * Sort zoom levels (if there are any) in numeric, ascending order
+     * @function
+     * @return {OpenSeadragon.Viewport} Chainable.
+     */
+    _sortZoomLevels: function() {
+        if ($.isArray(this.zoomLevels)) {
+            this.zoomLevels.sort(function(a, b) {
+                // numeric, ascending
+                return a - b;
+            });
+        }
+        return this;
     }
 };
 
