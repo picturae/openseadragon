@@ -814,6 +814,7 @@ $.Viewport.prototype = /** @lends OpenSeadragon.Viewport.prototype */{
     },
 
     /**
+     * Only used for fixed zoom levels. See zoomLevels in {@link OpenSeadragon.Options}.
      * @function
      * @param {Number} zoom - The desired zoom level
      * @return {Number} The proper zoom level.
@@ -837,6 +838,7 @@ $.Viewport.prototype = /** @lends OpenSeadragon.Viewport.prototype */{
     },
 
     /**
+     * Only used for fixed zoom levels. See zoomLevels in {@link OpenSeadragon.Options}.
      * @function
      * @param {Number} zoom - The desired zoom level
      * @return {Number} The proper zoom level.
