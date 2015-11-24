@@ -256,8 +256,9 @@
   *
   * @property {Array} [zoomLevels=null]
   *     An array of Floats where 1 is 100%. Allows zooming only to specific levels.
-  *     When `maxZoomPixelRatio`, `minZoomLevel` and/or `maxZoomLevel` are in conflict with this,
-  *     the most restrictive option is used. `defaultZoomLevel` is always respected, even if not in this list.
+  *     When `minZoomImageRatio`, `maxZoomPixelRatio`, `minZoomLevel` and/or `maxZoomLevel` are in conflict with this,
+  *     the most restrictive options are used. `defaultZoomLevel` is always respected, even if not in this list.
+  *     If `zoomPerScroll` is too big, some levels might be skipped, so a small value is recommended (e.g. 1.00001).
   *
   * @property {Boolean} [autoResize=true]
   *     Set to false to prevent polling for viewer size changes. Useful for providing custom resize behavior.
