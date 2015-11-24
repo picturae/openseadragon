@@ -352,6 +352,7 @@ $.Viewer = function( options ) {
         defaultZoomLevel:   this.defaultZoomLevel,
         minZoomLevel:       this.minZoomLevel,
         maxZoomLevel:       this.maxZoomLevel,
+        zoomLevels:         this.zoomLevels,
         viewer:             this,
         degrees:            this.degrees,
         navigatorRotate:    this.navigatorRotate,

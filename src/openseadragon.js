@@ -254,6 +254,11 @@
   *     When zoomed in beyond this value alternative compositing will be used to
   *     smooth out the edges between tiles. This will have a performance impact.
   *
+  * @property {Array} [zoomLevels=null]
+  *     An array of Floats where 1 is 100%. Allows zooming only to specific levels.
+  *     When `maxZoomPixelRatio`, `minZoomLevel` and/or `maxZoomLevel` are in conflict with this,
+  *     the most restrictive option is used. `defaultZoomLevel` is always respected, even if not in this list.
+  *
   * @property {Boolean} [autoResize=true]
   *     Set to false to prevent polling for viewer size changes. Useful for providing custom resize behavior.
   *
@@ -1028,6 +1033,7 @@ if (typeof define === 'function' && define.amd) {
             minZoomImageRatio:      0.9, //-> closer to 0 allows zoom out to infinity
             maxZoomPixelRatio:      1.1, //-> higher allows 'over zoom' into pixels
             smoothTileEdgesMinZoom: 1.1, //-> higher than maxZoomPixelRatio disables it
+            zoomLevels:             null,
             pixelsPerWheelLine:     40,
             autoResize:             true,
             preserveImageSizeOnResize: false, // requires autoResize=true
