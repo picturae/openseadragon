@@ -7,3 +7,5 @@ temp/
 .idea
 /nbproject/private/
 .directory
+
+/vendor/

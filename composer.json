@@ -1,0 +1,11 @@
+{
+    "name": "picturae-openseadragon/picturae-openseadragon",
+    "description": "Picturae fork of OpenSeadragon",
+    "authors": [
+        {
+            "name": "Picturae",
+            "email": "contact@picturae.com"
+        }
+    ],
+    "require": {}
+}
